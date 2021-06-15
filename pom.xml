@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2021 ABSA Group Limited
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>za.co.absa</groupId>
+    <artifactId>root-pom</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <packaging>pom</packaging>
+
+    <url>https://absaoss.github.io/</url>
+
+    <scm>
+        <url>${scm.url}</url>
+        <connection>${scm.connection}</connection>
+        <developerConnection>${scm.developerConnection}</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <organization>
+        <name>ABSA Group Limited</name>
+        <url>https://www.absa.africa</url>
+    </organization>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- SCM -->
+
+        <scm.url><!-- defined externally --></scm.url>
+        <scm.connection><!-- defined externally --></scm.connection>
+        <scm.developerConnection><!-- defined externally --></scm.developerConnection>
+
+        <!-- Docker -->
+
+        <!-- [REQUIRED] Must be defined in submodules -->
+        <dockerfile.imageName><!-- defined in submodules --></dockerfile.imageName>
+
+        <dockerfile.versionTagPrefix><!-- defined externally --></dockerfile.versionTagPrefix>
+        <dockerfile.versionTagSuffix><!-- defined externally --></dockerfile.versionTagSuffix>
+        <dockerfile.versionTagName>${dockerfile.versionTagPrefix}${project.version}${dockerfile.versionTagSuffix}</dockerfile.versionTagName>
+
+        <dockerfile.latestTagPrefix><!-- defined externally --></dockerfile.latestTagPrefix>
+        <dockerfile.latestTagSuffix><!-- defined externally --></dockerfile.latestTagSuffix>
+        <dockerfile.latestTagName>${dockerfile.latestTagPrefix}latest${dockerfile.latestTagSuffix}</dockerfile.latestTagName>
+
+        <!--
+            One of `dockerfile.repositoryUrl`, `dockerfile.repositoryPrefix` or `dockerfile.repository`
+            properties is required to be explicitly provided in the `mvn` command,
+            so that the resulted `dockerfile.repository` property has a correct value.
+        -->
+
+        <dockerfile.repositoryUrl><!-- defined externally --></dockerfile.repositoryUrl>
+        <dockerfile.repositoryPrefix>${dockerfile.repositoryUrl}/</dockerfile.repositoryPrefix>
+        <dockerfile.repositorySuffix><!-- defined externally --></dockerfile.repositorySuffix>
+        <dockerfile.repository>${dockerfile.repositoryPrefix}${dockerfile.imageName}${dockerfile.repositorySuffix}</dockerfile.repository>
+
+        <!-- The optional prefix for the base images in Dockerfile (mainly used in custom CI/CD pipelines to pull images from alternative locations) -->
+        <dockerfile.baseImagePrefix><!-- defined externally --></dockerfile.baseImagePrefix>
+    </properties>
+
+    <profiles>
+
+        <!-- Enables license check routine -->
+        <profile>
+            <id>license-check</id>
+            <activation>
+                <property>
+                    <name>license-check</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.rat</groupId>
+                        <artifactId>apache-rat-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/*.json</exclude>
+                                <exclude>**/*.log</exclude>
+                                <exclude>dependency-reduced-pom.xml</exclude>
+                                <exclude>.sonarcloud.properties</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Release routine configuration -->
+        <profile>
+            <id>release</id>
+            <activation>
+                <property>
+                    <name>release</name>
+                </property>
+            </activation>
+            <properties>
+                <project.scm.id>absaoss-scm</project.scm.id>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-release-plugin</artifactId>
+                        <configuration>
+                            <tagNameFormat>release/@{project.version}</tagNameFormat>
+                            <providerImplementations>
+                                <git>jgit</git>
+                            </providerImplementations>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.apache.maven.scm</groupId>
+                                <artifactId>maven-scm-api</artifactId>
+                                <version>1.11.2</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>org.apache.maven.scm</groupId>
+                                <artifactId>maven-scm-provider-jgit</artifactId>
+                                <version>1.11.2</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>org.eclipse.jgit</groupId>
+                                <artifactId>org.eclipse.jgit</artifactId>
+                                <version>5.5.1.201910021850-r</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Enables OSSRH deploy routine -->
+        <profile>
+            <id>ossrh</id>
+            <activation>
+                <property>
+                    <name>ossrh</name>
+                </property>
+            </activation>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
+                <repository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-docs</id>
+                                <goals>
+                                    <goal>javadoc-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <!-- Prevent `gpg` from using pinentry programs -->
+                            <gpgArguments>
+                                <arg>--pinentry-mode</arg>
+                                <arg>loopback</arg>
+                            </gpgArguments>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                            <autoDropAfterRelease>true</autoDropAfterRelease>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Enables Docker image(s) build / deploy -->
+        <profile>
+            <id>docker</id>
+            <activation>
+                <property>
+                    <name>docker</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.spotify</groupId>
+                        <artifactId>dockerfile-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>tag-version</id>
+                                <goals>
+                                    <goal>build</goal>
+                                    <goal>push</goal>
+                                </goals>
+                                <configuration>
+                                    <tag>${dockerfile.versionTagName}</tag>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>tag-latest</id>
+                                <goals>
+                                    <goal>tag</goal>
+                                    <goal>push</goal>
+                                </goals>
+                                <configuration>
+                                    <tag>${dockerfile.latestTagName}</tag>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <skip>true</skip>
+                            <!-- Dockerfile plugin requires <repository> to be non-empty even if <skip> is true -->
+                            <repository>${dockerfile.repository}</repository>
+                            <buildArgs combine.children="append">
+                                <DOCKER_BASE_IMAGE_PREFIX>${dockerfile.baseImagePrefix}</DOCKER_BASE_IMAGE_PREFIX>
+                                <PROJECT_NAME>${project.name}</PROJECT_NAME>
+                                <PROJECT_GROUP_ID>${project.groupId}</PROJECT_GROUP_ID>
+                                <PROJECT_ARTIFACT_ID>${project.artifactId}</PROJECT_ARTIFACT_ID>
+                                <PROJECT_VERSION>${project.version}</PROJECT_VERSION>
+                                <PROJECT_BASEDIR>${project.basedir}</PROJECT_BASEDIR>
+                                <PROJECT_BUILD_DIRECTORY>${project.build.directory}</PROJECT_BUILD_DIRECTORY>
+                                <PROJECT_BUILD_FINAL_NAME>${project.build.finalName}</PROJECT_BUILD_FINAL_NAME>
+                            </buildArgs>
+                            <useMavenSettingsForAuth>true</useMavenSettingsForAuth>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+    </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.8.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.5.3</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.2.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.rat</groupId>
+                    <artifactId>apache-rat-plugin</artifactId>
+                    <version>0.13</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.2.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>1.6</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonatype.plugins</groupId>
+                    <artifactId>nexus-staging-maven-plugin</artifactId>
+                    <version>1.6.8</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.spotify</groupId>
+                    <artifactId>dockerfile-maven-plugin</artifactId>
+                    <version>1.4.13</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+</project>
