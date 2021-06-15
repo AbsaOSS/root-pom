@@ -127,7 +127,7 @@ Using the following template, create a `Dockerfile` in a module for which you wa
 ```dockerfile
 
 # leave it empty, the value is passed from outside
-ARG DOCKER_BASE_IMAGE_PREFIX=
+ARG DOCKER_BASE_IMAGE_PREFIX
 
 # specify your desired base image
 ARG MY_BASE_IMAGE=my_base_docker_image_coordinates
@@ -139,10 +139,22 @@ FROM "$DOCKER_BASE_IMAGE_PREFIX""$MY_BASE_IMAGE"
 LABEL \
     vendor="ABSA" \
     copyright="2021 ABSA Group Limited" \
-    license="Apache License, version 2.0" \
+    license="Apache License, version 2.0"
     
-# the rest of your Dockerfile
-...
+# These arguments are propagated from the corresponding Maven properties.
+# Uncomment what you need.
+#
+# ARG PROJECT_NAME
+# ARG PROJECT_GROUP_ID
+# ARG PROJECT_ARTIFACT_ID
+# ARG PROJECT_VERSION
+# ARG PROJECT_BASEDIR
+# ARG PROJECT_BUILD_DIRECTORY
+# ARG PROJECT_BUILD_FINAL_NAME    
+
+# The rest of your Dockerfile here
+???
+
 ```
 
 In the corresponding `pom.xml`, specify the Docker image name and enable the dockerfile Maven plugin by setting the `<skip>` property to `false`

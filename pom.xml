@@ -281,6 +281,13 @@
                             <repository>${dockerfile.repository}</repository>
                             <buildArgs combine.children="append">
                                 <DOCKER_BASE_IMAGE_PREFIX>${dockerfile.baseImagePrefix}</DOCKER_BASE_IMAGE_PREFIX>
+                                <PROJECT_NAME>${project.name}</PROJECT_NAME>
+                                <PROJECT_GROUP_ID>${project.groupId}</PROJECT_GROUP_ID>
+                                <PROJECT_ARTIFACT_ID>${project.artifactId}</PROJECT_ARTIFACT_ID>
+                                <PROJECT_VERSION>${project.version}</PROJECT_VERSION>
+                                <PROJECT_BASEDIR>${project.basedir}</PROJECT_BASEDIR>
+                                <PROJECT_BUILD_DIRECTORY>${project.build.directory}</PROJECT_BUILD_DIRECTORY>
+                                <PROJECT_BUILD_FINAL_NAME>${project.build.finalName}</PROJECT_BUILD_FINAL_NAME>
                             </buildArgs>
                             <useMavenSettingsForAuth>true</useMavenSettingsForAuth>
                         </configuration>
