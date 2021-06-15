@@ -24,6 +24,9 @@
 
     <packaging>pom</packaging>
 
+    <name>root-pom</name>
+    <description>ABSA OSS Root POM</description>
+
     <url>https://absaoss.github.io/</url>
 
     <scm>
