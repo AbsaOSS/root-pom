@@ -24,6 +24,9 @@
 
     <packaging>pom</packaging>
 
+    <name>root-pom</name>
+    <description>ABSA OSS Root POM</description>
+
     <url>https://absaoss.github.io/</url>
 
     <scm>
@@ -45,6 +48,15 @@
         <name>ABSA Group Limited</name>
         <url>https://www.absa.africa</url>
     </organization>
+
+    <developers>
+        <developer>
+            <id>AbsaOSS/absaoss</id>
+            <name>ABSA R&amp;D team</name>
+            <timezone>Europe/Prague</timezone>
+            <url>https://github.com/orgs/AbsaOSS/teams/absaoss</url>
+        </developer>
+    </developers>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
