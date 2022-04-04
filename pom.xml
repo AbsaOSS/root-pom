@@ -120,6 +120,7 @@
                         </executions>
                         <configuration>
                             <excludes>
+                                <exclude>.github/**</exclude>
                                 <exclude>**/*.json</exclude>
                                 <exclude>**/*.log</exclude>
                                 <exclude>dependency-reduced-pom.xml</exclude>
