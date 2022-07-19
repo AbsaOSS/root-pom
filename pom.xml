@@ -125,6 +125,8 @@
                                 <exclude>**/*.log</exclude>
                                 <exclude>dependency-reduced-pom.xml</exclude>
                                 <exclude>.sonarcloud.properties</exclude>
+                                <exclude>CODE_OF_CONDUCT.md</exclude>
+                                <exclude>CONTRIBUTING.md</exclude>
                             </excludes>
                         </configuration>
                     </plugin>
