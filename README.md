@@ -80,6 +80,14 @@ Simply activate `license-check` profile on any Maven phase.
 mvn validate -Dlicense-check
 ```  
 
+### Measure code coverage
+
+Simply activate `code-coverage` profile on verify Maven phase.
+
+```shell
+mvn verify -Dcode-coverage
+```  
+
 See [Maven RAT plugin](https://creadur.apache.org/rat/apache-rat-plugin/index.html)
 
 ### Deploy to OSSRH (Maven Central)
