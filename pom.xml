@@ -93,6 +93,9 @@
 
         <!-- The optional prefix for the base images in Dockerfile (mainly used in custom CI/CD pipelines to pull images from alternative locations) -->
         <dockerfile.baseImagePrefix><!-- defined externally --></dockerfile.baseImagePrefix>
+
+        <!-- Test -->
+        <jacoco.version>0.8.8</jacoco.version>
     </properties>
 
     <profiles>
@@ -308,6 +311,39 @@
                             </buildArgs>
                             <useMavenSettingsForAuth>true</useMavenSettingsForAuth>
                         </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Enables JaCoCo code coverage measuring -->
+        <profile>
+            <id>code-coverage</id>
+            <activation>
+                <property>
+                    <name>code-coverage</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>${jacoco.version}</version>
+                        <executions>
+                            <execution>
+                                <id>jacoco-prepare-agent</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>jacoco-report</id>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
