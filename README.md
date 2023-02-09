@@ -134,14 +134,7 @@ Using the following template, create a `Dockerfile` in a module for which you wa
 
 ```dockerfile
 
-# leave it empty, the value is passed from outside
-ARG DOCKER_BASE_IMAGE_PREFIX
-
-# specify your desired base image
-ARG MY_BASE_IMAGE=my_base_docker_image_coordinates
-
-# all pulling images MUST be prefixed like this
-FROM "$DOCKER_BASE_IMAGE_PREFIX""$MY_BASE_IMAGE"
+FROM base_docker_image_coordinates
 
 # legal stuff
 LABEL \
@@ -161,7 +154,6 @@ LABEL \
 # ARG PROJECT_BUILD_FINAL_NAME    
 
 # The rest of your Dockerfile here
-???
 
 ```
 
@@ -179,8 +171,8 @@ In the corresponding `pom.xml`, specify the Docker image name and enable the doc
     <build>
         <plugins>
             <plugin>
-                <groupId>com.spotify</groupId>
-                <artifactId>dockerfile-maven-plugin</artifactId>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
                 <configuration>
                     <skip>false</skip>
                 </configuration>
@@ -206,7 +198,7 @@ Specify `dockerfile.repositoryUrl` property accordingly and execute Maven `deplo
 
 The example command below with create an image and push into the AbsaOSS space on the Docker Hub.
 ```shell
-mvn install -Ddocker -Ddockerfile.repositoryUrl=docker.io/absaoss
+mvn deploy -Ddocker -Ddockerfile.repositoryUrl=docker.io/absaoss
 ```
 
 ##### Tweaking image names and tags
