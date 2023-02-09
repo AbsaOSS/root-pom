@@ -91,9 +91,6 @@
         <dockerfile.repositorySuffix><!-- defined externally --></dockerfile.repositorySuffix>
         <dockerfile.repository>${dockerfile.repositoryPrefix}${dockerfile.imageName}${dockerfile.repositorySuffix}</dockerfile.repository>
 
-        <!-- The optional prefix for the base images in Dockerfile (mainly used in custom CI/CD pipelines to pull images from alternative locations) -->
-        <dockerfile.baseImagePrefix><!-- defined externally --></dockerfile.baseImagePrefix>
-
         <!-- Test -->
         <jacoco.version>0.8.8</jacoco.version>
     </properties>
@@ -271,45 +268,49 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>com.spotify</groupId>
-                        <artifactId>dockerfile-maven-plugin</artifactId>
+                        <groupId>io.fabric8</groupId>
+                        <artifactId>docker-maven-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>tag-version</id>
+                                <id>docker-build</id>
+                                <phase>install</phase>
                                 <goals>
                                     <goal>build</goal>
-                                    <goal>push</goal>
                                 </goals>
-                                <configuration>
-                                    <tag>${dockerfile.versionTagName}</tag>
-                                </configuration>
                             </execution>
                             <execution>
-                                <id>tag-latest</id>
+                                <id>docker-push</id>
+                                <phase>deploy</phase>
                                 <goals>
-                                    <goal>tag</goal>
                                     <goal>push</goal>
                                 </goals>
-                                <configuration>
-                                    <tag>${dockerfile.latestTagName}</tag>
-                                </configuration>
                             </execution>
                         </executions>
                         <configuration>
                             <skip>true</skip>
-                            <!-- Dockerfile plugin requires <repository> to be non-empty even if <skip> is true -->
-                            <repository>${dockerfile.repository}</repository>
-                            <buildArgs combine.children="append">
-                                <DOCKER_BASE_IMAGE_PREFIX>${dockerfile.baseImagePrefix}</DOCKER_BASE_IMAGE_PREFIX>
-                                <PROJECT_NAME>${project.name}</PROJECT_NAME>
-                                <PROJECT_GROUP_ID>${project.groupId}</PROJECT_GROUP_ID>
-                                <PROJECT_ARTIFACT_ID>${project.artifactId}</PROJECT_ARTIFACT_ID>
-                                <PROJECT_VERSION>${project.version}</PROJECT_VERSION>
-                                <PROJECT_BASEDIR>${project.basedir}</PROJECT_BASEDIR>
-                                <PROJECT_BUILD_DIRECTORY>${project.build.directory}</PROJECT_BUILD_DIRECTORY>
-                                <PROJECT_BUILD_FINAL_NAME>${project.build.finalName}</PROJECT_BUILD_FINAL_NAME>
-                            </buildArgs>
-                            <useMavenSettingsForAuth>true</useMavenSettingsForAuth>
+                            <images>
+                                <image>
+                                    <name>${dockerfile.repository}</name>
+                                    <build>
+                                        <contextDir>${project.basedir}</contextDir>
+                                        <tags>
+                                            <tag>${dockerfile.versionTagName}</tag>
+                                            <tag>${dockerfile.latestTagName}</tag>
+                                        </tags>
+                                        <filter>false</filter>
+                                        <args>
+                                            <PROJECT_NAME>${project.name}</PROJECT_NAME>
+                                            <PROJECT_GROUP_ID>${project.groupId}</PROJECT_GROUP_ID>
+                                            <PROJECT_ARTIFACT_ID>${project.artifactId}</PROJECT_ARTIFACT_ID>
+                                            <PROJECT_VERSION>${project.version}</PROJECT_VERSION>
+                                            <PROJECT_BASEDIR>${project.basedir}</PROJECT_BASEDIR>
+                                            <PROJECT_BUILD_DIRECTORY>${project.build.directory}</PROJECT_BUILD_DIRECTORY>
+                                            <PROJECT_BUILD_FINAL_NAME>${project.build.finalName}</PROJECT_BUILD_FINAL_NAME>
+                                        </args>
+                                    </build>
+
+                                </image>
+                            </images>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -400,9 +401,9 @@
                     <version>1.6.8</version>
                 </plugin>
                 <plugin>
-                    <groupId>com.spotify</groupId>
-                    <artifactId>dockerfile-maven-plugin</artifactId>
-                    <version>1.4.13</version>
+                    <groupId>io.fabric8</groupId>
+                    <artifactId>docker-maven-plugin</artifactId>
+                    <version>0.40.3</version>
                 </plugin>
             </plugins>
         </pluginManagement>
