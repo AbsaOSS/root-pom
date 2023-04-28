@@ -93,6 +93,8 @@
 
         <!-- Test -->
         <jacoco.version>0.8.9</jacoco.version>
+        <!-- Empty initialization required to protect JaCoCo agent settings from parent-pom (in code-coverage profile). -->
+        <argLine/>
     </properties>
 
     <profiles>
