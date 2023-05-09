@@ -93,7 +93,8 @@
 
         <!-- Test -->
         <jacoco.version>0.8.10</jacoco.version>
-        <default.scalatest.argLine/>
+        <!-- Empty initialization required to protect JaCoCo agent settings from parent-pom (in code-coverage profile). -->
+        <argLine />
     </properties>
 
     <profiles>
@@ -326,9 +327,6 @@
                     <name>code-coverage</name>
                 </property>
             </activation>
-            <properties>
-                <scalatest.argLine>${default.scalatest.argLine} ${argLine}</scalatest.argLine>
-            </properties>
             <build>
                 <plugins>
                     <plugin>
