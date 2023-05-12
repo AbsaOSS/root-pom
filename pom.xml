@@ -93,7 +93,8 @@
 
         <!-- Test -->
         <jacoco.version>0.8.10</jacoco.version>
-        <default.scalatest.argLine />
+        <!-- Optional extra argLine values for scalatest plugin. Client project could override this value. -->
+        <scalatest.argLine.extra/>
     </properties>
 
     <profiles>
@@ -326,9 +327,6 @@
                     <name>code-coverage</name>
                 </property>
             </activation>
-            <properties>
-                <scalatest.argLine>${default.scalatest.argLine} ${argLine}</scalatest.argLine>
-            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -354,6 +352,13 @@
                                 </configuration>
                             </execution>
                         </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.github.cerveada</groupId>
+                        <artifactId>scalatest-maven-plugin</artifactId>
+                        <configuration>
+                            <argLine>${argLine} ${scalatest.argLine.extra}</argLine>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
