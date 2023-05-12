@@ -20,7 +20,7 @@
 
     <groupId>za.co.absa</groupId>
     <artifactId>root-pom</artifactId>
-    <version>1.0.10-SNAPSHOT</version>
+    <version>1.0.10</version>
 
     <packaging>pom</packaging>
 
@@ -33,7 +33,7 @@
         <url>${scm.url}</url>
         <connection>${scm.connection}</connection>
         <developerConnection>${scm.developerConnection}</developerConnection>
-        <tag>HEAD</tag>
+        <tag>release/1.0.10</tag>
     </scm>
 
     <licenses>
@@ -94,7 +94,7 @@
         <!-- Test -->
         <jacoco.version>0.8.10</jacoco.version>
         <!-- Optional extra argLine values for scalatest plugin. Client project could override this value. -->
-        <scalatest.argLine.extra/>
+        <scalatest.argLine.extra />
     </properties>
 
     <profiles>
