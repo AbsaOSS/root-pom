@@ -91,6 +91,8 @@
         <docker.repositorySuffix><!-- defined externally --></docker.repositorySuffix>
         <docker.repository>${dockerfile.repositoryPrefix}${dockerfile.imageName}${dockerfile.repositorySuffix}</docker.repository>
 
+        <docker.platforms><!-- defined externally --></docker.platforms>
+
         <!--
             The properties with the prefix `dockerfile.*` are deprecated, and stay here for backward compatibility only.
             Outside of this POM, use their shorter variant `docker.*` instead.
@@ -318,6 +320,11 @@
                                             <tag>${dockerfile.latestTagName}</tag>
                                         </tags>
                                         <filter>false</filter>
+                                        <buildx>
+                                            <platforms>
+                                                <platform>${docker.platforms}</platform>
+                                            </platforms>
+                                        </buildx>
                                         <args>
                                             <PROJECT_NAME>${project.name}</PROJECT_NAME>
                                             <PROJECT_GROUP_ID>${project.groupId}</PROJECT_GROUP_ID>
@@ -435,7 +442,7 @@
                 <plugin>
                     <groupId>io.fabric8</groupId>
                     <artifactId>docker-maven-plugin</artifactId>
-                    <version>0.40.3</version>
+                    <version>0.43.1</version>
                 </plugin>
             </plugins>
         </pluginManagement>
