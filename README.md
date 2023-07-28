@@ -165,7 +165,7 @@ In the corresponding `pom.xml`, specify the Docker image name and enable the doc
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <properties>
-        <dockerfile.imageName>my-docker-image</dockerfile.imageName>
+        <docker.imageName>my-docker-image</docker.imageName>
     </properties>
 
     <build>
@@ -184,26 +184,26 @@ In the corresponding `pom.xml`, specify the Docker image name and enable the doc
 ```
 
 To build the Docker image execute Maven `install` phase with the `docker` profile enabled. You also need to specify the
-mandatory `dockerfile.repositoryUrl`. It serves as the image name prefix, and is mandatory even if you don't want to push the image in any remote
+mandatory `docker.repositoryUrl`. It serves as the image name prefix, and is mandatory even if you don't want to push the image in any remote
 repo.
 
 ```shell
-mvn install -Ddocker -Ddockerfile.repositoryUrl=foo
+mvn install -Ddocker -Ddocker.repositoryUrl=foo
 ```
 
 The above example will create a Docker image with the name `foo/my-docker-image` and two tags - `latest` and `x.y.z` (corresponding the POM version)
 
 ##### Push the image to a remote repository
-Specify `dockerfile.repositoryUrl` property accordingly and execute Maven `deploy` phase.
+Specify `docker.repositoryUrl` property accordingly and execute Maven `deploy` phase.
 
 The example command below with create an image and push into the AbsaOSS space on the Docker Hub.
 ```shell
-mvn deploy -Ddocker -Ddockerfile.repositoryUrl=docker.io/absaoss
+mvn deploy -Ddocker -Ddocker.repositoryUrl=docker.io/absaoss
 ```
 
 ##### Tweaking image names and tags
 
-See the `<dockerfile.*>` properties in the root `pom.xml` for details. All those parameters can be set/overwritten in the command line.
+See the `<docker.*>` properties in the root `pom.xml` for details. All those parameters can be set/overwritten in the command line.
 
 ```shell
 mvn ... -Dxxx.yyy=zzz

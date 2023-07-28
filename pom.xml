@@ -70,26 +70,46 @@
         <!-- Docker -->
 
         <!-- [REQUIRED] Must be defined in submodules -->
-        <dockerfile.imageName><!-- defined in submodules --></dockerfile.imageName>
+        <docker.imageName><!-- defined in submodules --></docker.imageName>
 
-        <dockerfile.versionTagPrefix><!-- defined externally --></dockerfile.versionTagPrefix>
-        <dockerfile.versionTagSuffix><!-- defined externally --></dockerfile.versionTagSuffix>
-        <dockerfile.versionTagName>${dockerfile.versionTagPrefix}${project.version}${dockerfile.versionTagSuffix}</dockerfile.versionTagName>
+        <docker.versionTagPrefix><!-- defined externally --></docker.versionTagPrefix>
+        <docker.versionTagSuffix><!-- defined externally --></docker.versionTagSuffix>
+        <docker.versionTagName>${dockerfile.versionTagPrefix}${project.version}${dockerfile.versionTagSuffix}</docker.versionTagName>
 
-        <dockerfile.latestTagPrefix><!-- defined externally --></dockerfile.latestTagPrefix>
-        <dockerfile.latestTagSuffix><!-- defined externally --></dockerfile.latestTagSuffix>
-        <dockerfile.latestTagName>${dockerfile.latestTagPrefix}latest${dockerfile.latestTagSuffix}</dockerfile.latestTagName>
+        <docker.latestTagPrefix><!-- defined externally --></docker.latestTagPrefix>
+        <docker.latestTagSuffix><!-- defined externally --></docker.latestTagSuffix>
+        <docker.latestTagName>${dockerfile.latestTagPrefix}latest${dockerfile.latestTagSuffix}</docker.latestTagName>
 
         <!--
-            One of `dockerfile.repositoryUrl`, `dockerfile.repositoryPrefix` or `dockerfile.repository`
+            One of `docker.repositoryUrl`, `docker.repositoryPrefix` or `docker.repository`
             properties is required to be explicitly provided in the `mvn` command,
-            so that the resulted `dockerfile.repository` property has a correct value.
+            so that the resulted `docker.repository` property has a correct value.
         -->
 
-        <dockerfile.repositoryUrl><!-- defined externally --></dockerfile.repositoryUrl>
-        <dockerfile.repositoryPrefix>${dockerfile.repositoryUrl}/</dockerfile.repositoryPrefix>
-        <dockerfile.repositorySuffix><!-- defined externally --></dockerfile.repositorySuffix>
-        <dockerfile.repository>${dockerfile.repositoryPrefix}${dockerfile.imageName}${dockerfile.repositorySuffix}</dockerfile.repository>
+        <docker.repositoryUrl><!-- defined externally --></docker.repositoryUrl>
+        <docker.repositoryPrefix>${dockerfile.repositoryUrl}/</docker.repositoryPrefix>
+        <docker.repositorySuffix><!-- defined externally --></docker.repositorySuffix>
+        <docker.repository>${dockerfile.repositoryPrefix}${dockerfile.imageName}${dockerfile.repositorySuffix}</docker.repository>
+
+        <docker.platforms><!-- defined externally --></docker.platforms>
+
+        <!--
+            The properties with the prefix `dockerfile.*` are deprecated, and stay here for backward compatibility only.
+            Outside of this POM, use their shorter variant `docker.*` instead.
+            Inside this POM, we should stick to `dockerfile.*` for now, to support both variants.
+        -->
+
+        <dockerfile.imageName>${docker.imageName}</dockerfile.imageName>
+        <dockerfile.versionTagPrefix>${docker.versionTagPrefix}</dockerfile.versionTagPrefix>
+        <dockerfile.versionTagSuffix>${docker.versionTagSuffix}</dockerfile.versionTagSuffix>
+        <dockerfile.versionTagName>${docker.versionTagName}</dockerfile.versionTagName>
+        <dockerfile.latestTagPrefix>${docker.latestTagPrefix}</dockerfile.latestTagPrefix>
+        <dockerfile.latestTagSuffix>${docker.latestTagSuffix}</dockerfile.latestTagSuffix>
+        <dockerfile.latestTagName>${docker.latestTagName}</dockerfile.latestTagName>
+        <dockerfile.repositoryUrl>${docker.repositoryUrl}</dockerfile.repositoryUrl>
+        <dockerfile.repositoryPrefix>${docker.repositoryPrefix}</dockerfile.repositoryPrefix>
+        <dockerfile.repositorySuffix>${docker.repositorySuffix}</dockerfile.repositorySuffix>
+        <dockerfile.repository>${docker.repository}</dockerfile.repository>
 
         <!-- Test -->
         <jacoco.version>0.8.10</jacoco.version>
@@ -300,6 +320,11 @@
                                             <tag>${dockerfile.latestTagName}</tag>
                                         </tags>
                                         <filter>false</filter>
+                                        <buildx>
+                                            <platforms>
+                                                <platform>${docker.platforms}</platform>
+                                            </platforms>
+                                        </buildx>
                                         <args>
                                             <PROJECT_NAME>${project.name}</PROJECT_NAME>
                                             <PROJECT_GROUP_ID>${project.groupId}</PROJECT_GROUP_ID>
@@ -417,7 +442,7 @@
                 <plugin>
                     <groupId>io.fabric8</groupId>
                     <artifactId>docker-maven-plugin</artifactId>
-                    <version>0.40.3</version>
+                    <version>0.43.1</version>
                 </plugin>
             </plugins>
         </pluginManagement>
