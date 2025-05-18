@@ -112,7 +112,7 @@
         <dockerfile.repository>${docker.repository}</dockerfile.repository>
 
         <!-- Test -->
-        <jacoco.version>0.8.10</jacoco.version>
+        <jacoco.version>0.8.11</jacoco.version>
         <!-- Optional extra argLine values for scalatest plugin. Client project could override this value. -->
         <scalatest.argLine.extra />
     </properties>
@@ -364,6 +364,9 @@
                                 <goals>
                                     <goal>prepare-agent</goal>
                                 </goals>
+                                <configuration>
+                                    <propertyName>jacoco-agent.scalatest.argLine</propertyName>
+                                </configuration>
                             </execution>
                             <execution>
                                 <id>jacoco-report</id>
@@ -382,7 +385,7 @@
                         <groupId>com.github.cerveada</groupId>
                         <artifactId>scalatest-maven-plugin</artifactId>
                         <configuration>
-                            <argLine>${argLine} ${scalatest.argLine.extra}</argLine>
+                            <argLine>${jacoco-agent.scalatest.argLine} ${scalatest.argLine.extra}</argLine>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -443,6 +446,13 @@
                     <groupId>io.fabric8</groupId>
                     <artifactId>docker-maven-plugin</artifactId>
                     <version>0.43.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.cerveada</groupId>
+                    <artifactId>scalatest-maven-plugin</artifactId>
+                    <configuration>
+                        <argLine>${scalatest.argLine.extra}</argLine>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
