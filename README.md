@@ -30,7 +30,7 @@ Configure your project POM
     </parent>
 
     <scm>
-        <url>${scm.url}</url>
+        <url>https://YOUR_PROJECT_URL_HERE</url>
         <connection>${scm.connection}</connection>
         <developerConnection>${scm.developerConnection}</developerConnection>
         <tag>HEAD</tag>
@@ -92,7 +92,7 @@ See [Maven RAT plugin](https://creadur.apache.org/rat/apache-rat-plugin/index.ht
 
 ### Deploy to OSSRH (Maven Central)
 
-Configure OSSRH credentials and GPG passphrase in the Maven `settings.xml`
+Configure **Maven Central Portal** credentials and **GPG passphrase** in the Maven `settings.xml`
 
 ```xml
 
@@ -102,7 +102,8 @@ Configure OSSRH credentials and GPG passphrase in the Maven `settings.xml`
     <servers>
         <server>
             <id>ossrh</id>
-            <username>absaoss-ba</username>
+            <!-- See https://central.sonatype.org/publish/generate-portal-token/ -->
+            <username>...</username>
             <password>...</password>
         </server>
         <server>

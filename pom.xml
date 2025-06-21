@@ -20,7 +20,7 @@
 
     <groupId>za.co.absa</groupId>
     <artifactId>root-pom</artifactId>
-    <version>1.0.16-SNAPSHOT</version>
+    <version>1.1.0-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
@@ -30,7 +30,7 @@
     <url>https://absaoss.github.io/</url>
 
     <scm>
-        <url>${scm.url}</url>
+        <url>https://github.com/AbsaOSS/root-pom</url>
         <connection>${scm.connection}</connection>
         <developerConnection>${scm.developerConnection}</developerConnection>
         <tag>HEAD</tag>
@@ -63,7 +63,6 @@
 
         <!-- SCM -->
 
-        <scm.url><!-- defined externally --></scm.url>
         <scm.connection><!-- defined externally --></scm.connection>
         <scm.developerConnection><!-- defined externally --></scm.developerConnection>
 
@@ -209,16 +208,6 @@
                     <name>ossrh</name>
                 </property>
             </activation>
-            <distributionManagement>
-                <snapshotRepository>
-                    <id>ossrh</id>
-                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-                </snapshotRepository>
-                <repository>
-                    <id>ossrh</id>
-                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-                </repository>
-            </distributionManagement>
             <build>
                 <plugins>
                     <plugin>
@@ -269,7 +258,7 @@
                         <artifactId>central-publishing-maven-plugin</artifactId>
                         <extensions>true</extensions>
                         <configuration>
-                            <publishingServerId>central</publishingServerId>
+                            <publishingServerId>ossrh</publishingServerId>
                             <autoPublish>true</autoPublish>
                             <deploymentName>${pom.groupId}:${pom.artifactId}:${project.version}</deploymentName>
                         </configuration>
