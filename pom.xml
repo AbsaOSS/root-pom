@@ -201,7 +201,7 @@
             </build>
         </profile>
 
-        <!-- Enables OSSRH deploy routine -->
+        <!-- Enables Maven Central deployment routine -->
         <profile>
             <id>ossrh</id>
             <activation>
@@ -265,14 +265,13 @@
                         </configuration>
                     </plugin>
                     <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
                         <extensions>true</extensions>
                         <configuration>
-                            <serverId>ossrh</serverId>
-                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                            <autoDropAfterRelease>true</autoDropAfterRelease>
+                            <publishingServerId>central</publishingServerId>
+                            <autoPublish>true</autoPublish>
+                            <deploymentName>${pom.groupId}:${pom.artifactId}:${project.version}</deploymentName>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -438,9 +437,9 @@
                     <version>1.6</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.sonatype.plugins</groupId>
-                    <artifactId>nexus-staging-maven-plugin</artifactId>
-                    <version>1.7.0</version>
+                    <groupId>org.sonatype.central</groupId>
+                    <artifactId>central-publishing-maven-plugin</artifactId>
+                    <version>0.8.0</version>
                 </plugin>
                 <plugin>
                     <groupId>io.fabric8</groupId>
