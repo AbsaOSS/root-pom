@@ -111,7 +111,8 @@
         <dockerfile.repository>${docker.repository}</dockerfile.repository>
 
         <!-- Test -->
-        <jacoco.version>0.8.11</jacoco.version>
+        <jacoco.version>0.8.15</jacoco.version>
+        <jmf.version>2.5.0</jmf.version>
         <!-- Optional extra argLine values for scalatest plugin. Client project could override this value. -->
         <scalatest.argLine.extra />
     </properties>
@@ -342,8 +343,9 @@
             </activation>
             <build>
                 <plugins>
+                    <!-- JaCoCo Maven Plugin (for agent) -->
                     <plugin>
-                        <groupId>za.co.absa.jacoco</groupId>
+                        <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
                         <version>${jacoco.version}</version>
                         <executions>
@@ -356,15 +358,57 @@
                                     <propertyName>jacoco-agent.scalatest.argLine</propertyName>
                                 </configuration>
                             </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- JaCoCo Method Filter Plugin -->
+                    <plugin>
+                        <groupId>io.github.moranaapps</groupId>
+                        <artifactId>jacoco-method-filter-maven-plugin</artifactId>
+                        <version>${jmf.version}</version>
+                        <executions>
                             <execution>
-                                <id>jacoco-report</id>
+                                <id>jmf-rewrite</id>
+                                <phase>process-test-classes</phase>
+                                <goals>
+                                    <goal>rewrite</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>jmf-report</id>
+                                <phase>verify</phase>
                                 <goals>
                                     <goal>report</goal>
                                 </goals>
                                 <configuration>
-                                    <title>${project.name} - scala:${scala.version}</title>
-                                    <doMethodFiltration>true</doMethodFiltration>
-                                    <doScalaMethodFiltration>true</doScalaMethodFiltration>
+                                    <reportName>${project.name} - scala:${scala.version}</reportName>
+                                    <reportFormats>html,xml</reportFormats>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- Overlay filtered classes before tests -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <version>3.3.1</version>
+                        <executions>
+                            <execution>
+                                <id>overlay-filtered-classes</id>
+                                <phase>process-test-classes</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                                    <overwrite>true</overwrite>
+                                    <resources>
+                                        <resource>
+                                            <directory>${project.build.directory}/classes-filtered</directory>
+                                            <filtering>false</filtering>
+                                        </resource>
+                                    </resources>
                                 </configuration>
                             </execution>
                         </executions>
