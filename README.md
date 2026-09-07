@@ -1,6 +1,6 @@
 # Root POM for ABSA OSS repos
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/za.co.absa/root-pom/badge.svg)](https://search.maven.org/search?q=g:za.co.absa%20AND%20a:root-pom)
+[![Maven Central Version](https://img.shields.io/maven-central/v/za.co.absa/root-pom)](https://central.sonatype.com/artifact/za.co.absa/root-pom)
 
 The root POM defines a set of profiles and properties that implement conventions on how the ABSA OSS Maven based projects are built, released,
 published, checked for license or otherwise treated in the CI/CD pipelines.
